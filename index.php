@@ -1,4 +1,18 @@
+<!-- PHP -->
+<?php
+require ('validation.php');
 
+$nbvaleurs = 0;
+$nbtables = 0;
+
+if(isset($_GET['nbvaleurs']) && isset($_GET['nbtables'])){
+    $entered = $_GET;
+    $data = validated();
+
+    $nbtables = $_GET['nbtables'];
+    $nbvaleurs = $_GET['nbvaleurs'];
+}
+?>
 <!-- Début du template d’affichage -->
 <!DOCTYPE html>
 <html lang="fr-be">
@@ -14,46 +28,47 @@
     <h1>Les tables de multiplication</h1>
     <section>
         <h2>Indiquez quelles tables vous souhaitez</h2>
-        <form action="index.php" method="get">
+
+        <form action="<?= $_SERVER['PHP_SELF'] ;?>" method="get">
+
             <div class="form-group">
                 <label class="control-label" for="nbtables">Nombre de tables : </label>
                 <input class="form-control" id="nbtables" type="text" name="nbtables"
-                       value="2">
+                       value="<?= $entered["nbtables"] ?? 0 ;?>">
             </div>
             <div class="form-group">
                 <label class="control-label" for="nbvaleurs">Nombre de valeurs : </label>
                 <input class="form-control" id="nbvaleurs" type="text" name="nbvaleurs"
-                       value="3">
+                       value="<?= $entered["nbvaleurs"] ?? 0 ;?>">
             </div>
             <input type="submit">
         </form>
     </section>
+    <?php if(isset($data['error'])) :?>
+    <p style="color: #f34848; font-style: italic;"><?= $data['error'];?></p>
+    <?php elseif($nbtables > 0 && $nbvaleurs > 0) :?>
     <section>
         <h2>Voici vos tables</h2>
         <table class="table table-striped table-bordered">
-            <caption>Les 3 premières valeurs des 2 premières tables</caption>
+            <caption>Les <?= $nbvaleurs ?> premières valeurs des <?= $nbtables ?> premières tables</caption>
+
             <tr>
-                <th class="vide">&nbsp;</th>
-                <th scope="col">1</th>
-                <th scope="col">2</th>
+                <th class="vide">&nbsp</th>
+                <?php for ($th = 1; $th <= $nbtables; $th++):?>
+                    <th scope="col"><?= $th ?></th>
+                <?php endfor;?>
             </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>1 * 1 = 1</td>
-                <td>1 * 2 = 2</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>2 * 1 = 2</td>
-                <td>2 * 2 = 4</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>3 * 1 = 3</td>
-                <td>3 * 2 = 6</td>
-            </tr>
+            <?php for ($th = 1; $th <= $nbvaleurs; $th++): ?>
+                <tr>
+                    <th scope="row"><?= $th ?></th>
+                    <?php for ($td = 1; $td <= $nbtables; $td++): ?>
+                        <td><?= $th ?> * <?= $td ?> = <?= $th * $td ?></td>
+                    <?php endfor ?>
+                </tr>
+            <?php endfor ?>
         </table>
     </section>
+    <?php endif;?>
 </main>
 </body>
 </html>

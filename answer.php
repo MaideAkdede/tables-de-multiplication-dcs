@@ -21,8 +21,6 @@ if (isset($_GET['nbvaleurs'], $_GET['nbtables'])) {
         $errors ['tableErrors'] = 'Vous n’avez pas entré un entier positif pour déterminer le nombre de tables à calculer';
     }
 }
-
-
 ?>
 
 <!-- Début du template d’affichage -->
